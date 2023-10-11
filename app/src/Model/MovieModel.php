@@ -13,8 +13,15 @@ class MovieModel
         $this->movies = (new MovieData())->getMovies();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getRandomMovies(int $count = 3): array
     {
+        if ($count <= 0) {
+            throw new \Exception('Parameter should be greater or equal than 0');
+        }
+
         $randomKeys = array_rand($this->movies, $count);
 
         return array_intersect_key($this->movies, array_flip($randomKeys));
