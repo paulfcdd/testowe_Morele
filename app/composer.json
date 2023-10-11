@@ -10,5 +10,7 @@
             "name": "paul novikov"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^10.4"
+    }
 }
