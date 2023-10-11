@@ -1,0 +1,27 @@
+<?php
+
+require_once '../vendor/autoload.php';
+
+use App\Controller\MovieController;
+
+$app = new MovieController();
+
+$uri = $_SERVER['REQUEST_URI'];
+$uri = ltrim($uri, '/');
+
+$result = match ($uri) {
+    'case1' => $app->getRandomMovies(),
+    'case2' => $app->getMoviesStartFromW(),
+    'case3' => $app->getMultiWordMovies(),
+};
+
+if ($result instanceof Exception) {
+    echo $result->getMessage();
+} else {
+    echo '<pre>';
+    print_r($result);
+    echo '</pre>';
+}
+
+
+
