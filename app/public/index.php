@@ -3,8 +3,13 @@
 require_once '../vendor/autoload.php';
 
 use App\Controller\MovieController;
+use App\Data\MovieData;
+use App\Model\MovieModel;
 
-$app = new MovieController();
+$movieData = new MovieData();
+$movieModel = new MovieModel($movieData);
+
+$app = new MovieController($movieModel);
 
 $uri = $_SERVER['REQUEST_URI'];
 $uri = ltrim($uri, '/');

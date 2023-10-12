@@ -3,23 +3,24 @@
 namespace App\Model;
 
 use App\Data\MovieData;
+use App\Exception\InvalidCountException;
 
 class MovieModel
 {
     private array $movies;
 
-    public function __construct()
+    public function __construct(MovieData $movieData)
     {
-        $this->movies = (new MovieData())->getMovies();
+        $this->movies = $movieData->getMovies();
     }
 
     /**
-     * @throws \Exception
+     * @throws InvalidCountException
      */
     public function getRandomMovies(int $count = 3): array
     {
         if ($count <= 0) {
-            throw new \Exception('Parameter should be greater or equal than 0');
+            throw new InvalidCountException();
         }
 
         $randomKeys = array_rand($this->movies, $count);
@@ -32,10 +33,8 @@ class MovieModel
         $filteredMovies = [];
 
         foreach ($this->movies as $movie) {
-            $movieWithoutSpaces = str_replace(' ', '', $movie);
-
-            if (str_starts_with($movie, 'W') && !in_array($movie, $filteredMovies)) {
-                if (mb_strlen($movieWithoutSpaces) % 2 === 0) {
+            if (str_starts_with($movie, 'W')) {
+                if (mb_strlen($movie) % 2 === 0) {
                     $filteredMovies[] = $movie;
                 }
             }

@@ -2,17 +2,21 @@
 
 namespace App\Controller;
 
+use App\Exception\InvalidCountException;
 use App\Model\MovieModel;
 
 class MovieController
 {
     private MovieModel $movieModel;
 
-    public function __construct()
+    public function __construct(MovieModel $movieModel)
     {
-        $this->movieModel = new MovieModel();
+        $this->movieModel = $movieModel;
     }
 
+    /**
+     * @throws InvalidCountException
+     */
     public function getRandomMovies(): array
     {
         return $this->movieModel->getRandomMovies();

@@ -1,21 +1,43 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use App\Model\MovieModel;  // Adjust the namespace according to your project structure.
+use App\Model\MovieModel;
+use App\Data\MovieData;
+use App\Exception\InvalidCountException;
 
 class MovieModelTest extends TestCase
 {
-    private $movieModel;
+    private MovieModel $movieModel;
 
     protected function setUp(): void
     {
-        $this->movieModel = new MovieModel();
+        $mockMovieData = $this->createMock(MovieData::class);
+        $sampleMovies = [
+            "When Harry Met Sally",
+            "Good Will Hunting",
+            "War of the Worlds",
+            "Wonder Woman",
+            "Mad Max",
+            "The Wizard of Oz"
+        ];
+        $mockMovieData->method('getMovies')->willReturn($sampleMovies);
+
+        $this->movieModel = new MovieModel($mockMovieData);
     }
 
+    /**
+     * @throws InvalidCountException
+     */
     public function testGetRandomMovies(): void
     {
         $movies = $this->movieModel->getRandomMovies(3);
         $this->assertCount(3, $movies);
+    }
+
+    public function testGetRandomMoviesException(): void
+    {
+        $this->expectException(InvalidCountException::class);
+        $this->movieModel->getRandomMovies(0);
     }
 
     public function testGetMoviesStartFromW(): void
@@ -24,11 +46,10 @@ class MovieModelTest extends TestCase
         foreach ($movies as $movie) {
             $this->assertStringStartsWith('W', $movie);
 
-            $movieWithoutSpaces = str_replace(' ', '', $movie);
-            if (strlen($movieWithoutSpaces) % 2 == 1) {  // if the length is odd
-                echo "The movie '{$movie}' has an odd number of characters: " . strlen($movieWithoutSpaces) . "\n";
+            if (strlen($movie) % 2 == 1) {  // if the length is odd
+                echo "The movie '{$movie}' has an odd number of characters: " . strlen($movie) . "\n";
             }
-            $this->assertEquals(0, strlen($movieWithoutSpaces) % 2);
+            $this->assertEquals(0, strlen($movie) % 2);
         }
     }
 
