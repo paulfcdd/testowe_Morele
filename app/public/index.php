@@ -18,6 +18,7 @@ $result = match ($uri) {
     'case1' => $app->getRandomMovies(),
     'case2' => $app->getMoviesStartFromW(),
     'case3' => $app->getMultiWordMovies(),
+    default => 'Hello world'
 };
 
 if ($result instanceof Exception) {
